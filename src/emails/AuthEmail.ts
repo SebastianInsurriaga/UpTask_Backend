@@ -31,7 +31,7 @@ export class AuthEmail {
                     Hola ${user.name},<br>
                     Has creado tu cuenta en UpTask, ya casi esta todo listo, solo debes confirmar tu cuenta. Haz clic en el botón para continuar.
                     </p>
-                    <a href="${process.env.FRONTEND_URL}/auth/new-password" style="display: inline-block; padding: 12px 24px; background-color: #D946EF; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 4px; margin: 20px 0; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#C026D3'" onmouseout="this.style.backgroundColor='#D946EF'">
+                    <a href="${process.env.FRONTEND_URL}/auth/confirm-account" style="display: inline-block; padding: 12px 24px; background-color: #D946EF; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 4px; margin: 20px 0; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#C026D3'" onmouseout="this.style.backgroundColor='#D946EF'">
                     Confirmar cuenta
                     </a>
                     <p style="font-size: 16px; color: #4B5563; line-height: 24px; margin: 20px 0;">
