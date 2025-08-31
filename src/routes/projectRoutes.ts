@@ -13,6 +13,37 @@ const router = Router()
 
 router.use(authenticate)
 
+/**
+ * @openapi
+ * /api/projects/:
+ *   post:  
+ *     summary: Creates a new project
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               projectName:
+ *                   type: string
+ *                   example: "name"
+ *               clientName:
+ *                   type: string
+ *                   example: "client name"
+ *               description:
+ *                   type: string
+ *                   example: "description of the project"
+ *     responses:
+ *       200:
+ *         description: Project created succesfully
+ *       500:
+ *         description: Server error
+ */
 router.post('/',
     body('projectName')
         .notEmpty().withMessage('El nombre del proyecto es obligatorio'),
@@ -23,16 +54,107 @@ router.post('/',
     handleInputErrors,
     ProjectController.createProject
 )
+
+/**
+ * @openapi
+ * /api/projects/:
+ *   get:
+ *     summary: Get all projects for the authenticated user
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of projects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: './models/Project'
+ *       500:
+ *         description: Server error
+ */
 router.get('/', ProjectController.getAllProjects)
 
+/**
+ * @openapi
+ * /api/projects/{id}:
+ *   get:
+ *     summary: Get a project by ID
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID (MongoDB ObjectId)
+ *     responses:
+ *       200:
+ *         description: Project found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: './models/Project'
+ *       404:
+ *         description: Project not found or unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.get('/:id', 
     param('id').isMongoId().withMessage('ID no valido'),
     handleInputErrors,
     ProjectController.getProjectById)
 
-/* Routes for Tasks */ 
 router.param('projectId', ProjectExists) /* para todas las rutas con projectId */ 
 
+/**
+ * @openapi
+ * /api/projects/{projectId}:
+ *   put:
+ *     summary: Update a project
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID (MongoDB ObjectId)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               projectName:
+ *                 type: string
+ *                 example: "New Project Name"
+ *               clientName:
+ *                 type: string
+ *                 example: "Updated Client"
+ *               description:
+ *                 type: string
+ *                 example: "Updated description"
+ *     responses:
+ *       200:
+ *         description: Project updated successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Server error
+ */
 router.put('/:projectId', 
     param('projectId').isMongoId().withMessage('ID no valido'),
     body('projectName')
@@ -45,12 +167,38 @@ router.put('/:projectId',
     hasAuthorization,
     ProjectController.updateProject)
 
+/**
+ * @openapi
+ * /api/projects/{projectId}:
+ *   delete:
+ *     summary: Delete a project
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID (MongoDB ObjectId)
+ *     responses:
+ *       200:
+ *         description: Project deleted successfully
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Server error
+ */
 router.delete('/:projectId', 
     param('projectId').isMongoId().withMessage('ID no valido'),
     handleInputErrors,
     hasAuthorization,
     ProjectController.deleteProject)
 
+/* Routes for Tasks */
+ 
 router.post('/:projectId/task',
     hasAuthorization,
     body('name')
