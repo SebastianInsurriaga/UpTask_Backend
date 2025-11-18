@@ -233,7 +233,7 @@ router.post('/validate-token',
 
 /**
  * @openapi
- * /api/auth/update-password:
+ * /api/auth/updatePasswordWithToken:
  *   post:  
  *     summary: Update the password with new token
  *     description: If the token is correct, then the user can change its password.
@@ -263,7 +263,7 @@ router.post('/validate-token',
  *       500:
  *         description: Error
  */
-router.post('/update-password/:token',
+router.post('/updatePasswordWithToken/:token',
     param('token').isNumeric().withMessage('Token no valido'),
     body('password')
         .isLength({min: 8}).withMessage('El password es muy corto, debe ser minimo 8 caracteres'),
